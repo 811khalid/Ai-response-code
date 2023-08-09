@@ -1,0 +1,28 @@
+import io
+import os
+from google.cloud import speech_v1p1beta1 as speech
+
+# set up the Google Cloud Speech-to-Text client
+client = speech.SpeechClient()
+
+# specify the path to the audio file you want to transcribe
+audio_file_path = 'path/to/audio/file.wav'
+
+# open the audio file and read its contents
+with io.open(audio_file_path, 'rb') as audio_file:
+    content = audio_file.read()
+
+# specify the audio file format and language
+audio = speech.RecognitionAudio(content=content)
+config = speech.RecognitionConfig(
+    encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+    sample_rate_hertz=16000,
+    language_code='en-US'
+)
+
+# transcribe the audio file using the Google Cloud Speech-to-Text API
+response = client.recognize(config=config, audio=audio)
+
+# print out the transcribed text
+for result in response.results:
+    print(result.alternatives[0].transcript)
