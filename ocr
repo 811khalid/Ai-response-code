@@ -1,0 +1,29 @@
+import pytesseract
+from PIL import Image
+import PyPDF2
+
+def extract_text_from_image(image_path):
+    image = Image.open(image_path)
+    text = pytesseract.image_to_string(image)
+    return text
+
+def extract_text_from_pdf(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfFileReader(file)
+        text = ""
+        for page in range(reader.numPages):
+            text += reader.getPage(page).extract_text()
+    return text
+
+file_path = input("Enter the path to the image or PDF file: ")
+
+if file_path.endswith(".pdf"):
+    extracted_text = extract_text_from_pdf(file_path)
+else:
+    extracted_text = extract_text_from_image(file_path)
+
+print("Extracted text:")
+print(extracted_text)
+
+
+
